@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!--/* th:fragment="modal" — "Add Job" modal with URL / Text tabs */-->
+  <div th:fragment="modal" id="add-job-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div class="bg-surface-2 border border-hairline rounded-xl panel-edge w-full max-w-lg p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-base font-semibold text-ink">Add Job</h2>
+        <button type="button"
+                onclick="document.getElementById('modal-root').innerHTML=''"
+                class="text-ink-subtle hover:text-ink focus-ring rounded-md p-1 text-sm">
+          Close
+        </button>
+      </div>
+
+      <div class="flex gap-2">
+        <button type="button" id="add-job-tab-url"
+                onclick="addJobSetMode('url')"
+                class="text-sm font-medium px-3 py-1.5 rounded-md bg-surface-3 text-ink focus-ring">
+          Paste URL
+        </button>
+        <button type="button" id="add-job-tab-text"
+                onclick="addJobSetMode('text')"
+                class="text-sm font-medium px-3 py-1.5 rounded-md text-ink-subtle hover:text-ink focus-ring">
+          Paste Text
+        </button>
+      </div>
+
+      <form th:hx-post="@{/jobs/preview}" hx-target="#add-job-body" hx-swap="innerHTML" class="flex flex-col gap-3">
+        <input type="hidden" name="mode" id="add-job-mode" value="url"/>
+
+        <div id="add-job-field-url">
+          <input type="url" name="url" placeholder="https://company.com/careers/job-posting"
+                 class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"/>
+        </div>
+        <div id="add-job-field-text" class="hidden">
+          <textarea name="text" rows="6" placeholder="Paste the job description here"
+                    class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"></textarea>
+        </div>
+
+        <button type="submit"
+                class="self-start text-sm font-medium px-3.5 py-2 rounded-md bg-primary text-on-primary hover:bg-primary-hover focus-ring">
+          Extract details
+        </button>
+      </form>
+
+      <div id="add-job-body"></div>
+    </div>
+
+    <script>
+      function addJobSetMode(mode) {
+        document.getElementById('add-job-mode').value = mode;
+        document.getElementById('add-job-field-url').classList.toggle('hidden', mode !== 'url');
+        document.getElementById('add-job-field-text').classList.toggle('hidden', mode !== 'text');
+        document.getElementById('add-job-tab-url').classList.toggle('bg-surface-3', mode === 'url');
+        document.getElementById('add-job-tab-url').classList.toggle('text-ink-subtle', mode !== 'url');
+        document.getElementById('add-job-tab-text').classList.toggle('bg-surface-3', mode === 'text');
+        document.getElementById('add-job-tab-text').classList.toggle('text-ink-subtle', mode !== 'text');
+      }
+    </script>
+  </div>
+
+</body>
+</html>

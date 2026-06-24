@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!--/* th:fragment="form" — editable preview of extracted job fields, ready to save */-->
+  <form th:fragment="form" th:hx-post="@{/jobs}" class="flex flex-col gap-3 pt-2 border-t border-hairline">
+    <p th:if="${error != null}" class="text-xs text-red-400" th:text="${error}">Error message</p>
+
+    <input type="hidden" name="sourceUrl" th:value="${sourceUrl}"/>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-subtle">Title</label>
+      <input type="text" name="title" required th:value="${title}"
+             class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-subtle">Company</label>
+      <input type="text" name="company" required th:value="${company}"
+             class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-subtle">Location</label>
+      <input type="text" name="location" th:value="${location}"
+             class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"/>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-xs text-ink-subtle">Description</label>
+      <textarea name="description" rows="6" th:text="${description}"
+                class="w-full bg-surface-1 border border-hairline rounded-md px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary focus-ring"></textarea>
+    </div>
+
+    <button type="submit"
+            class="self-start text-sm font-medium px-3.5 py-2 rounded-md bg-primary text-on-primary hover:bg-primary-hover focus-ring">
+      Save to Wishlist
+    </button>
+  </form>
+
+</body>
+</html>

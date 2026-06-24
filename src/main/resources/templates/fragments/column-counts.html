@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!--/* th:fragment="counts" — out-of-band refresh of each column's job-count badge */-->
+  <th:block th:fragment="counts(counts)">
+    <th:block th:each="entry : ${counts}">
+      <span th:id="'count-' + ${entry.key.name()}" hx-swap-oob="true"
+            class="ref-tag ml-auto"
+            th:text="${entry.value.size()}">0</span>
+    </th:block>
+  </th:block>
+
+</body>
+</html>

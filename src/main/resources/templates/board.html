@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{fragments/layout :: head}"></th:block>
+  <title>Job Tracker</title>
+</head>
+<body class="font-sans bg-canvas text-ink min-h-screen">
+
+<th:block th:replace="~{fragments/layout :: topnav}"></th:block>
+
+<main class="px-6 py-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+    <th:block th:each="entry : ${jobsByStatus}">
+      <div th:replace="~{fragments/column :: column(status=${entry.key}, jobs=${entry.value})}"></div>
+    </th:block>
+  </div>
+</main>
+
+<div id="modal-root"></div>
+
+<script>
+  function updateEmptyState(column) {
+    var emptyEl = column.querySelector('.empty-state');
+    if (!emptyEl) return;
+    var hasCards = column.querySelector('[data-job-id]') !== null;
+    emptyEl.classList.toggle('hidden', hasCards);
+  }
+
+  function initBoardSortable() {
+    document.querySelectorAll('.board-column').forEach(function (column) {
+      if (column.dataset.sortableInit) return;
+      column.dataset.sortableInit = 'true';
+
+      new Sortable(column, {
+        group: 'board',
+        animation: 150,
+        ghostClass: 'opacity-50',
+        filter: '.empty-state',
+        onEnd: function (evt) {
+          var jobId = evt.item.getAttribute('data-job-id');
+          var newStatus = evt.to.getAttribute('data-status');
+          var orderedIds = Array.from(evt.to.children)
+              .filter(function (el) { return el.hasAttribute('data-job-id'); })
+              .map(function (el) { return el.getAttribute('data-job-id'); });
+
+          evt.item.setAttribute('data-status', newStatus);
+          updateEmptyState(evt.from);
+          updateEmptyState(evt.to);
+
+          htmx.ajax('POST', '/jobs/' + jobId + '/move', {
+            swap: 'none',
+            values: {
+              status: newStatus,
+              orderedIds: orderedIds.join(',')
+            }
+          });
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initBoardSortable);
+  document.body.addEventListener('htmx:afterSwap', initBoardSortable);
+</script>
+
+</body>
+</html>

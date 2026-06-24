@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!--/* th:fragment="column" — a single board column (header + sortable list of cards) */-->
+  <section th:fragment="column(status, jobs)"
+           th:id="'section-' + ${status.name()}"
+           th:class="'col-rule col-rule--' + ${#strings.toLowerCase(status.name())} + ' bg-surface-1 border border-hairline rounded-xl panel-edge overflow-hidden flex flex-col'">
+    <header class="flex items-center gap-2 px-4 py-3 bg-surface-3 border-b border-hairline">
+      <h2 class="font-display text-sm font-semibold text-ink tracking-wide" th:text="${#strings.capitalize(#strings.toLowerCase(status.name()))}">Status</h2>
+      <span th:id="'count-' + ${status.name()}" class="ref-tag ml-auto" th:text="${jobs.size()}">0</span>
+    </header>
+    <div class="board-column p-4 flex flex-col gap-3 min-h-[200px] flex-1"
+         th:id="'column-' + ${status.name()}"
+         th:data-status="${status.name()}">
+      <p class="empty-state text-sm text-ink-subtle" th:if="${jobs.isEmpty()}">No jobs yet.</p>
+      <th:block th:each="job : ${jobs}">
+        <div th:replace="~{fragments/card :: card(job=${job})}"></div>
+      </th:block>
+    </div>
+  </section>
+
+</body>
+</html>

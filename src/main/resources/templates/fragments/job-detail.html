@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!--/* th:fragment="panel" — job detail slide-over panel, opened from a card click */-->
+  <div th:fragment="panel(job, kit)" id="job-detail-overlay" class="fixed inset-0 z-50 flex items-stretch justify-end bg-black/60">
+    <div class="bg-surface-2 border-l border-hairline panel-edge w-full max-w-xl h-full overflow-y-auto p-6 flex flex-col gap-4">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <h2 class="font-display text-base font-semibold text-ink" th:text="${job.title}">Job Title</h2>
+          <p class="text-sm text-ink-subtle" th:text="${job.company}">Company</p>
+          <p class="text-xs text-ink-tertiary mt-0.5" th:if="${job.location != null and !#strings.isEmpty(job.location)}" th:text="${job.location}">Location</p>
+        </div>
+        <button type="button"
+                onclick="document.getElementById('modal-root').innerHTML=''"
+                class="text-ink-subtle hover:text-ink focus-ring rounded-md p-1 text-sm">
+          Close
+        </button>
+      </div>
+
+      <a th:if="${job.sourceUrl != null and !#strings.isEmpty(job.sourceUrl)}" th:href="${job.sourceUrl}"
+         target="_blank" rel="noopener" class="text-xs text-primary hover:text-primary-hover">
+        View original posting
+      </a>
+
+      <div class="flex flex-col gap-1">
+        <h3 class="text-xs font-medium text-ink-subtle uppercase tracking-wide">Description</h3>
+        <p class="text-sm text-ink-muted whitespace-pre-wrap"
+           th:text="${job.description != null and !#strings.isEmpty(job.description)} ? ${job.description} : 'No description.'">Description</p>
+      </div>
+
+      <div th:replace="~{fragments/kit-panel :: panel}"></div>
+    </div>
+  </div>
+
+</body>
+</html>

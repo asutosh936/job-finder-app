@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <!--/* th:fragment="head" — common <head> contents: fonts, Tailwind config, tokens, htmx/SortableJS */-->
+  <th:block th:fragment="head">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Fonts: Space Grotesk (display/chrome), Inter (body), Source Serif 4
+         (generated documents), JetBrains Mono (tracking codes, stamps) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+    <!-- Tailwind (CDN) with "Dispatch" theme tokens: a dark control deck
+         for the board, and a paper surface for generated documents. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:inline="javascript">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              canvas: '#11151c',
+              surface: {
+                1: '#1a2029',
+                2: '#222934',
+                3: '#2b333f',
+                4: '#343d4a'
+              },
+              hairline: {
+                DEFAULT: '#2b323d',
+                strong: '#3e4856'
+              },
+              ink: {
+                DEFAULT: '#eef1f5',
+                muted: '#b9c1cd',
+                subtle: '#8893a1',
+                tertiary: '#67717f'
+              },
+              primary: {
+                DEFAULT: '#5fb3a3',
+                hover: '#7bc9ba',
+                focus: '#5fb3a3'
+              },
+              'on-primary': '#0b1417',
+              success: '#5fb3a3',
+              paper: {
+                DEFAULT: '#f4ecd8',
+                ink: '#2b2418',
+                muted: '#6b6049',
+                edge: '#e3d8bd'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'system-ui', 'sans-serif'],
+              display: ['Space Grotesk', 'Inter', 'sans-serif'],
+              serif: ['Source Serif 4', 'Georgia', 'serif'],
+              mono: ['JetBrains Mono', 'ui-monospace', 'SF Mono', 'monospace']
+            },
+            borderRadius: {
+              xs: '4px',
+              sm: '6px',
+              md: '8px',
+              lg: '12px',
+              xl: '16px',
+              xxl: '24px'
+            }
+          }
+        }
+      };
+    </script>
+
+    <link rel="stylesheet" th:href="@{/css/tokens.css}"/>
+
+    <!-- htmx + SortableJS -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+  </th:block>
+
+  <!--/* th:fragment="topnav" — sticky dark top navigation bar */-->
+  <th:block th:fragment="topnav">
+    <nav class="sticky top-0 z-10 h-14 flex items-center justify-between px-6 bg-canvas border-b border-hairline">
+      <div class="flex items-baseline gap-2">
+        <span class="font-display text-sm font-semibold text-ink tracking-tight">Job Tracker</span>
+        <span class="ref-tag hidden sm:inline">DISPATCH</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button"
+                th:hx-get="@{/profile}" hx-target="#modal-root" hx-swap="innerHTML"
+                class="text-sm font-medium px-3.5 py-2 rounded-md bg-surface-1 text-ink border border-hairline hover:border-hairline-strong focus-ring">
+          Profile
+        </button>
+        <button type="button"
+                th:hx-get="@{/jobs/new}" hx-target="#modal-root" hx-swap="innerHTML"
+                class="text-sm font-medium px-3.5 py-2 rounded-md bg-primary text-on-primary hover:bg-primary-hover focus-ring">
+          + Add Job
+        </button>
+      </div>
+    </nav>
+  </th:block>
+</html>
