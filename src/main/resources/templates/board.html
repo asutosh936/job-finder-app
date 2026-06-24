@@ -9,6 +9,31 @@
 <th:block th:replace="~{fragments/layout :: topnav}"></th:block>
 
 <main class="px-6 py-6">
+  <!-- Onboarding Section -->
+  <div class="mb-8 p-6 bg-surface-1 border border-hairline rounded-lg shadow-sm" id="onboarding-panel">
+    <div class="flex justify-between items-start mb-4">
+      <h2 class="text-lg font-display font-semibold text-ink">Welcome to Job Tracker (Dispatch)</h2>
+      <button onclick="document.getElementById('onboarding-panel').style.display='none'" class="text-ink-subtle hover:text-ink focus-ring rounded">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-ink-muted">
+      <div>
+        <h3 class="font-medium text-ink mb-1">1. Set Up Your Profile</h3>
+        <p>Click "Profile" in the top navigation to upload your master resume (PDF). We'll extract the text to help tailor future applications.</p>
+      </div>
+      <div>
+        <h3 class="font-medium text-ink mb-1">2. Track Jobs</h3>
+        <p>Click "+ Add Job" to start tracking a new opportunity. You can drag and drop job cards between the columns below to update their status.</p>
+      </div>
+      <div>
+        <h3 class="font-medium text-ink mb-1">3. Generate AI Kits</h3>
+        <p>Click any job card to view details. Use the "Generate Kit" button to let AI write a tailored cover letter and resume for that specific role.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Board Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
     <th:block th:each="entry : ${jobsByStatus}">
       <div th:replace="~{fragments/column :: column(status=${entry.key}, jobs=${entry.value})}"></div>

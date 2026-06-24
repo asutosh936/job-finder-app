@@ -12,9 +12,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class JobService {
+
+    private static final Logger log = LoggerFactory.getLogger(JobService.class);
 
     private final JobRepository jobRepository;
     private final GeneratedKitRepository generatedKitRepository;
@@ -52,6 +56,7 @@ public class JobService {
      * Creates and persists a new job at the end of the Wishlist column.
      */
     public Job createJob(String title, String company, String location, String sourceUrl, String description) {
+        log.debug("Creating new job: {} at {}", title, company);
         List<Job> wishlist = jobRepository.findByStatusOrderBySortOrderAsc(JobStatus.WISHLIST);
         int nextOrder = wishlist.isEmpty() ? 0 : wishlist.get(wishlist.size() - 1).getSortOrder() + 1;
 
@@ -72,6 +77,7 @@ public class JobService {
      */
     @Transactional
     public void moveJob(Long jobId, JobStatus newStatus, List<Long> orderedIds) {
+        log.debug("Moving job {} to status {} with {} ordered sibling ids", jobId, newStatus, orderedIds.size());
         Job job = getJob(jobId);
         job.setStatus(newStatus);
         jobRepository.save(job);

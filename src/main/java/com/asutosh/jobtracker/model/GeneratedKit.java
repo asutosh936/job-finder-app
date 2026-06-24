@@ -42,7 +42,7 @@ public class GeneratedKit {
     @Column(name = "tailored_resume", columnDefinition = "CLOB")
     private String tailoredResume;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "generated_kit_interview_questions", joinColumns = @JoinColumn(name = "generated_kit_id"))
     @OrderColumn(name = "question_order")
     @Column(name = "question", columnDefinition = "CLOB")

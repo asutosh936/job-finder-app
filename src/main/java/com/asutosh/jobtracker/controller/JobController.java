@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/jobs")
 public class JobController {
+
+    private static final Logger log = LoggerFactory.getLogger(JobController.class);
 
     private final JobService jobService;
     private final JobExtractionService jobExtractionService;
@@ -39,6 +43,7 @@ public class JobController {
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
+        log.info("Accessing detail view for job id {}", id);
         GeneratedKit kit = jobService.getKit(id).orElse(null);
         model.addAttribute("job", jobService.getJob(id));
         model.addAttribute("kit", kit);
@@ -60,6 +65,7 @@ public class JobController {
                            Model model) {
         boolean isUrlMode = "url".equals(mode);
         String sourceUrl = isUrlMode ? url : null;
+        log.info("Previewing job, mode: {}, url: {}", mode, sourceUrl);
 
         try {
             JobExtractionResult result = isUrlMode
@@ -70,7 +76,9 @@ public class JobController {
             model.addAttribute("location", result.location());
             model.addAttribute("description", result.description());
             model.addAttribute("error", null);
+            log.debug("Successfully extracted job details for title: {}", result.title());
         } catch (Exception e) {
+            log.error("Failed to extract job details automatically", e);
             model.addAttribute("title", "");
             model.addAttribute("company", "");
             model.addAttribute("location", "");
@@ -89,6 +97,7 @@ public class JobController {
                         @RequestParam(required = false) String sourceUrl,
                         @RequestParam(required = false) String description,
                         HttpServletResponse response) {
+        log.info("Creating new job with title: '{}' at company: '{}'", title, company);
         jobService.createJob(title, company, location, sourceUrl, description);
 
         response.setHeader("HX-Redirect", "/");
@@ -100,6 +109,7 @@ public class JobController {
                         @RequestParam JobStatus status,
                         @RequestParam(required = false) String orderedIds,
                         Model model) {
+        log.info("Moving job id {} to status {}", id, status);
         List<Long> ids = (orderedIds == null || orderedIds.isBlank())
                 ? List.of()
                 : Arrays.stream(orderedIds.split(","))

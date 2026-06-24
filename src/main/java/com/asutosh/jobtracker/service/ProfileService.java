@@ -8,9 +8,13 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ProfileService {
+
+    private static final Logger log = LoggerFactory.getLogger(ProfileService.class);
 
     private final UserProfileRepository userProfileRepository;
 
@@ -28,6 +32,7 @@ public class ProfileService {
     }
 
     public UserProfile updateResumeText(String resumeText) {
+        log.debug("Updating master resume text in profile");
         UserProfile profile = getProfile();
         profile.setMasterResumeText(resumeText);
         return userProfileRepository.save(profile);
@@ -37,9 +42,11 @@ public class ProfileService {
      * Extracts plain text from an uploaded resume PDF using PDFBox.
      */
     public String extractTextFromPdf(byte[] pdfBytes) {
+        log.info("Extracting text from PDF via PDFBox");
         try (PDDocument document = Loader.loadPDF(pdfBytes)) {
             return new PDFTextStripper().getText(document);
         } catch (IOException e) {
+            log.error("Failed to extract text from PDF", e);
             throw new ProfileException("Failed to extract text from PDF", e);
         }
     }

@@ -5,12 +5,16 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Thin wrapper around the Claude Messages API (POST /v1/messages).
  */
 @Component
 public class ClaudeClient {
+
+    private static final Logger log = LoggerFactory.getLogger(ClaudeClient.class);
 
     private final RestClient claudeRestClient;
     private final ClaudeApiProperties properties;
@@ -37,7 +41,13 @@ public class ClaudeClient {
                     .body(requestBody)
                     .retrieve()
                     .body(ClaudeMessageResponse.class);
+            
+            if (response != null && response.usage() != null) {
+                log.info("Claude API Call - Used {} input tokens and {} output tokens.", 
+                        response.usage().input_tokens(), response.usage().output_tokens());
+            }
         } catch (Exception e) {
+            log.error("Claude API call failed", e);
             throw new ClaudeApiException("Claude API request failed: " + e.getMessage(), e);
         }
 

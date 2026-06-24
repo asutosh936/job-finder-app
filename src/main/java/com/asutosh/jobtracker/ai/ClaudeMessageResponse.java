@@ -5,8 +5,11 @@ import java.util.List;
 /**
  * Minimal mapping of the Claude Messages API response — only the fields we need.
  */
-public record ClaudeMessageResponse(List<ContentBlock> content) {
+public record ClaudeMessageResponse(List<ContentBlock> content, Usage usage) {
 
     public record ContentBlock(String type, String text) {
+    }
+
+    public record Usage(int input_tokens, int output_tokens) {
     }
 }
