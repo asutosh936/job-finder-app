@@ -4,7 +4,6 @@ A personal Kanban-style job application tracker with an AI-powered "generate kit
 feature (cover letter, tailored resume, interview questions, company brief) backed
 by the Claude API.
 
-See [TASKS.md](TASKS.md) for the implementation plan and progress.
 
 ## Prerequisites
 
@@ -37,8 +36,8 @@ The first run will create a local H2 database file under `./data/jobtracker.mv.d
 
 Once you see `Started JobtrackerApplication`, open your browser to:
 
-- **Board**: http://localhost:8080/
-- **H2 console** (for local DB inspection): http://localhost:8080/h2-console
+- **Board**: http://localhost:8083/
+- **H2 console** (for local DB inspection): http://localhost:8083/h2-console
   - JDBC URL: `jdbc:h2:file:./data/jobtracker`
   - User: `sa`, Password: *(blank)*
 
